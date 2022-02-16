@@ -128,17 +128,11 @@ pub fn now() -> f64 {
 #[cfg(not(any(feature = "wasm-bindgen", feature = "stdweb")))]
 mod js {
     extern "C" {
-        #[cfg(not(target_os = "emscripten"))]
         pub fn now() -> f64;
-        #[cfg(target_os = "emscripten")]
-        pub fn _emscripten_get_now() -> f64;
     }
 }
 // Make the unsafe extern function "safe" so it can be called like the other 'now' functions
 #[cfg(not(any(feature = "wasm-bindgen", feature = "stdweb")))]
 pub fn now() -> f64 {
-    #[cfg(not(target_os = "emscripten"))]
-    return unsafe { js::now() };
-    #[cfg(target_os = "emscripten")]
-    return unsafe { js::_emscripten_get_now() };
+    unsafe { js::now() }
 }
